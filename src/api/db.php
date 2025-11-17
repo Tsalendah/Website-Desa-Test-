@@ -1,6 +1,6 @@
 <?php
 $host = 'localhost';
-$db = 'inovasi_digital';
+$db = 'desa';
 $user = 'root';
 $pass = '';
 $charset = 'utf8mb4';

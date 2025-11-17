@@ -5,7 +5,7 @@
             <a href="index.php" class="text-gray-600 hover:text-blue-600">Home</a>
             <a href="about.php" class="text-gray-600 hover:text-blue-600">About Us</a>
             <a href="Potensi.php" class="text-gray-600 hover:text-blue-600">Potensi</a>
-            <a href="index.php#gallery" class="text-gray-600 hover:text-blue-600">Gallery</a>
+            <a href="Gallery.php" class="text-gray-600 hover:text-blue-600">Gallery</a>
             <a href="index.php#contact" class="text-gray-600 hover:text-blue-600">Contact</a>
         </div>
         <div id="auth-section" class="hidden md:flex">
