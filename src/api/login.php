@@ -66,6 +66,15 @@ try {
         $stmt = $pdo->prepare("INSERT INTO sessions (user_id, session_token) VALUES (?, ?)");
         $stmt->execute([$user_id, $session_token]);
 
+        // set cookie aman (httpOnly). NOTE: untuk pengembangan localhost tanpa HTTPS, jangan set 'secure' => true
+        setcookie('session_token', $session_token, [
+            'expires' => time() + 3600,
+            'path' => '/',
+            'httponly' => true,
+            'samesite' => 'Lax',
+            // 'secure' => true, // aktifkan hanya jika site pakai HTTPS
+        ]);
+
         http_response_code(200);
         echo json_encode([
             "message" => "Login berhasil.",

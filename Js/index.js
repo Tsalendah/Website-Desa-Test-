@@ -1,9 +1,11 @@
-// Mobile Menu
+// Mobile Menu (safe guard)
 const mobileMenuButton = document.getElementById("mobile-menu-button");
 const mobileMenu = document.getElementById("mobile-menu");
-mobileMenuButton.addEventListener("click", () => {
-  mobileMenu.classList.toggle("hidden");
-});
+if (mobileMenuButton && mobileMenu) {
+  mobileMenuButton.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+  });
+}
 
 // === BAGIAN UTAMA ===
 const loginModal = document.getElementById("login-modal");
@@ -34,20 +36,18 @@ window.hideRegisterModal = function () {
   }
 };
 
-function updateUIForLoggedIn(user, role) { // Parameter 'role' ditambahkan
+function updateUIForLoggedIn(user, role) {
   let adminLink = '';
-  // Tampilkan link admin jika rolenya 'admin'
   if (role === 'admin') {
-    adminLink = '<a href="admin.php" class="text-sm text-red-600 hover:text-red-800 font-medium">Admin Panel</a>';
+    adminLink = '<a href="admin.php" class="text-sm text-red-600 hover:text-red-800 font-medium ml-4">Admin Panel</a>';
   }
 
-  // --- Perbarui Navigasi Desktop ---
   if (authSection) {
     authSection.innerHTML =
       '<div class="flex items-center space-x-4">' +
-      adminLink + // Link admin ditambahkan di sini
+      adminLink +
       '<span class="text-gray-700">Welcome, ' +
-      user +
+      (user || '') +
       "</span>" +
       '<button onclick="logout()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Logout</button>' +
       "</div>";
@@ -62,7 +62,6 @@ function updateUIForLoggedIn(user, role) { // Parameter 'role' ditambahkan
   );
   if (mobileLoginBtn) mobileLoginBtn.style.display = "none";
   if (mobileRegisterBtn) mobileRegisterBtn.style.display = "none";
-  
 }
 
 function updateUIForLoggedOut() {
@@ -82,6 +81,7 @@ function updateUIForLoggedOut() {
   if (mobileLoginBtn) mobileLoginBtn.style.display = "block";
   if (mobileRegisterBtn) mobileRegisterBtn.style.display = "block";
 }
+
 async function logout() {
   const token = localStorage.getItem("auth_token");
 
@@ -97,10 +97,12 @@ async function logout() {
     }
   }
 
-  localStorage.removeItem("loggedInUser");
+  // Konsisten: hapus semua key yang digunakan
+  localStorage.removeItem("auth_user_name");
+  localStorage.removeItem("auth_role");
   localStorage.removeItem("auth_token");
-  localStorage.removeItem("userRole"); // <-- 'role' dihapus saat logout
-
+  localStorage.removeItem("loggedInUser");
+  localStorage.removeItem("userRole");
 
   updateUIForLoggedOut();
 }
@@ -128,22 +130,24 @@ if (loginForm) {
         body: JSON.stringify({ username, password }),
       });
 
-      const data = await res.json();
+      const resJson = await res.json();
 
-      if (res.ok) {
-        // Simpan semua data dari server
-        localStorage.setItem("loggedInUser", data.username);
-        if (data.token) localStorage.setItem("auth_token", data.token);
-        if (data.role) localStorage.setItem("userRole", data.role); // <-- 'role' disimpan
+      if (res.ok && resJson.token) {
+          // simpan dengan key yang konsisten
+          localStorage.setItem('auth_token', resJson.token);
+          localStorage.setItem('auth_user_name', resJson.user?.name || username);
+          localStorage.setItem('auth_role', resJson.user?.role || 'user');
 
-        // Kirim 'role' ke fungsi updateUI
-        updateUIForLoggedIn(data.username, data.role); // <-- 'role' dikirim
-        
-        hideLoginModal();
-        loginForm.reset();
+          // juga simpan legacy keys supaya bagian lain tetap kompatibel
+          localStorage.setItem('loggedInUser', resJson.user?.name || username);
+          localStorage.setItem('userRole', resJson.user?.role || 'user');
+
+          // perbarui UI tanpa reload jika mungkin
+          updateUIForLoggedIn(localStorage.getItem('auth_user_name'), localStorage.getItem('auth_role'));
+          hideLoginModal();
       } else {
         if (errorMessage) {
-          errorMessage.textContent = data.error || "Login gagal.";
+          errorMessage.textContent = resJson.error || "Login gagal.";
           errorMessage.classList.remove("hidden");
         }
       }
@@ -195,7 +199,6 @@ if (registerForm) {
         // Tutup modal setelah 2 detik
         setTimeout(hideRegisterModal, 2000);
       } else {
-
         if (errEl) {
           errEl.textContent = data.error || "Gagal register.";
           errEl.className = "text-red-500 text-sm mb-4"; // Pastikan warna merah
@@ -213,54 +216,42 @@ if (registerForm) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  // --- Cek Status Login ---
-  const user = localStorage.getItem("loggedInUser");
-  const role = localStorage.getItem("userRole"); // <-- Dapatkan 'role'
+  // --- Cek Status Login --- (pakai kunci yang konsisten)
+  const user = localStorage.getItem("auth_user_name") || localStorage.getItem("loggedInUser");
+  const role = localStorage.getItem("auth_role") || localStorage.getItem("userRole");
   if (user) {
-    updateUIForLoggedIn(user, role); // <-- Kirim 'role'
+    updateUIForLoggedIn(user, role);
   } else {
     updateUIForLoggedOut();
   }
 
   async function loadArticles() {
-    // Temukan div dropdown di header Anda
     const articleDropdown = document.querySelector(".relative.group .group-hover\\:block");
-    
-    if (!articleDropdown) return; // Keluar jika tidak ditemukan
-
+    if (!articleDropdown) return;
     try {
         const res = await fetch("api/get_articles.php");
         if (!res.ok) {
            articleDropdown.innerHTML = '<span class="block px-4 py-2 text-sm text-red-500">Gagal memuat.</span>';
            return;
         }
-
         const articles = await res.json();
-        
-        // Bersihkan link statis
         articleDropdown.innerHTML = ''; 
-
         if (articles.length > 0) {
             articles.forEach(article => {
                 const link = document.createElement('a');
-                
                 link.href = 'view_article.php?id=' + article.id; 
-
                 link.textContent = article.title;
                 link.className = 'block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50';
                 articleDropdown.appendChild(link);
             });
         } else {
-            // Tampilkan pesan jika tidak ada artikel
             articleDropdown.innerHTML = '<span class="block px-4 py-2 text-sm text-gray-500">Belum ada artikel.</span>';
         }
-
     } catch (err) {
         console.error("Gagal memuat artikel:", err);
         articleDropdown.innerHTML = '<span class="block px-4 py-2 text-sm text-red-500">Gagal memuat.</span>';
     }
   }
 
-  // Panggil fungsi baru saat halaman dimuat
   loadArticles();
 });

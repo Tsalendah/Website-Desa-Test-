@@ -99,64 +99,82 @@
     <section id="gallery" class="section bg-gray-200 py-16">
       <div class="container mx-auto px-6">
         <h2 class="text-3xl font-bold text-center mb-12">Galeri Kegiatan</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1974&auto=format&fit=crop"
-            alt="Gallery Image 1" class="rounded-lg shadow-md w-full h-full object-cover" />
-          <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop"
-            alt="Gallery Image 2" class="rounded-lg shadow-md w-full h-full object-cover" />
-          <img src="https://images.unsplash.com/photo-1531545514256-b1400bc00f31?q=80&w=1974&auto=format&fit=crop"
-            alt="Gallery Image 3" class="rounded-lg shadow-md w-full h-full object-cover" />
-          <img src="./Gallery/image1.jpg" alt="Gallery Image 4"
-            class="rounded-lg shadow-md w-full h-full object-cover" />
-        </div>
+        <?php
+        // Tampilkan 3 file gambar terbaru dari folder src/Gallery
+        $gdir = __DIR__ . '/Gallery';
+        $imgs = [];
+        if (is_dir($gdir)) {
+          foreach (scandir($gdir) as $f) {
+            if ($f === '.' || $f === '..')
+              continue;
+            $ext = strtolower(pathinfo($f, PATHINFO_EXTENSION));
+            if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+              $full = $gdir . DIRECTORY_SEPARATOR . $f;
+              $imgs[] = ['file' => $f, 'mtime' => filemtime($full)];
+            }
+          }
+        }
+
+        if (empty($imgs)) {
+          echo '<p class="text-center text-gray-500">Belum ada gambar di galeri.</p>';
+        } else {
+          // Urutkan berdasarkan waktu modifikasi (terbaru dulu)
+          usort($imgs, function ($a, $b) {
+            return $b['mtime'] <=> $a['mtime'];
+          });
+          $latest = array_slice($imgs, 0, 3);
+          echo '<div class="grid grid-cols-1 md:grid-cols-3 gap-4">';
+          foreach ($latest as $img) {
+            $f = $img['file'];
+            $url = 'Gallery/' . rawurlencode($f);
+            echo '<div class="rounded-lg overflow-hidden shadow-md bg-white">';
+            echo '<img src="' . htmlspecialchars($url) . '" alt="' . htmlspecialchars($f) . '" class="w-full h-64 md:h-48 object-cover">';
+            echo '</div>';
+          }
+          echo '</div>';
+        }
+        ?>
       </div>
     </section>
     <section id="clients" class="section container mx-auto px-6 py-16">
-      <h2 class="text-3xl font-bold text-center mb-12">Dipercaya Oleh</h2>
-      <div class="flex flex-wrap justify-center items-center gap-8 md:gap-12">
-        <p class="text-2xl font-semibold text-black-500">Tesla</p>
-        <p class="text-2xl font-semibold text-gray-500">Solusi Makmur</p>
-        <p class="text-2xl font-semibold text-gray-500">Nusantara Jaya</p>
-        <p class="text-2xl font-semibold text-gray-500">Global Foods</p>
-        <p class="text-2xl font-semibold text-gray-500">Creative Hub</p>
-      </div>
-    </section>
-    <section id="contact" class="section bg-blue-600 text-white py-16">
-      <div class="bg-image-2 section" style="padding-top: 0; padding-bottom: 0">
-        <div class="container mx-auto px-6 py-16 text-white">
-          <h2 class="text-3xl font-bold text-center mb-12">Hubungi Kami</h2>
-          <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
-            <div>
-              <h4 class="text-xl font-semibold mb-4">Informasi Kontak</h4>
-              <p class="mb-2">
-                <strong>Alamat:</strong><br />Jl. Gotong Royong No. 321,
-                Manado, Indonesia
-              </p>
-              <p class="mb-2"><strong>Telepon:</strong> 0815-9966-662</p>
-              <p class="mb-2"><strong>Email:</strong> halo@Guys</p>
+      <section id="contact" class="section bg-blue-600 text-white py-16">
+        <div class="bg-image-2 section" style="padding-top: 0; padding-bottom: 0">
+          <div class="container mx-auto px-6 py-16 text-white">
+            <h2 class="text-3xl font-bold text-center mb-12">Hubungi Kami</h2>
+            <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
+              <div>
+                <h4 class="text-xl font-semibold mb-4">Informasi Kontak</h4>
+                <p class="mb-2">
+                  <strong>Alamat:</strong><br />Jl. Gotong Royong No. 321,
+                  Manado, Indonesia
+                </p>
+                <p class="mb-2"><strong>Telepon:</strong> 0815-9966-662</p>
+                <p class="mb-2"><strong>Email:</strong> halo@Guys</p>
+              </div>
+              <form>
+                <div class="mb-4">
+                  <label for="name" class="block mb-2">Nama</label>
+                  <input type="text" id="name" class="w-full p-2 rounded bg-blue-500 text-white placeholder-gray-300" />
+                </div>
+                <div class="mb-4">
+                  <label for="email" class="block mb-2">Email</label>
+                  <input type="email" id="email"
+                    class="w-full p-2 rounded bg-blue-500 text-white placeholder-gray-300" />
+                </div>
+                <div class="mb-4">
+                  <label for="message" class="block mb-2">Pesan</label>
+                  <textarea id="message" rows="4"
+                    class="w-full p-2 rounded bg-blue-500 text-white placeholder-gray-300"></textarea>
+                </div>
+                <button type="submit"
+                  class="w-full bg-white text-blue-600 font-bold py-2 px-4 rounded hover:bg-gray-200">
+                  Kirim Pesan
+                </button>
+              </form>
             </div>
-            <form>
-              <div class="mb-4">
-                <label for="name" class="block mb-2">Nama</label>
-                <input type="text" id="name" class="w-full p-2 rounded bg-blue-500 text-white placeholder-gray-300" />
-              </div>
-              <div class="mb-4">
-                <label for="email" class="block mb-2">Email</label>
-                <input type="email" id="email" class="w-full p-2 rounded bg-blue-500 text-white placeholder-gray-300" />
-              </div>
-              <div class="mb-4">
-                <label for="message" class="block mb-2">Pesan</label>
-                <textarea id="message" rows="4"
-                  class="w-full p-2 rounded bg-blue-500 text-white placeholder-gray-300"></textarea>
-              </div>
-              <button type="submit" class="w-full bg-white text-blue-600 font-bold py-2 px-4 rounded hover:bg-gray-200">
-                Kirim Pesan
-              </button>
-            </form>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
   </main>
   <footer class="bg-gray-800 text-white py-6">
     <div class="container mx-auto px-6 text-center">
