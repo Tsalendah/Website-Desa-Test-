@@ -15,7 +15,7 @@
 
     <main class="pt-28 container mx-auto px-6 pb-16">
         <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-extrabold">Potensi Desa Tolok</h1>
+            <h1 class="text-4xl md:text-5xl font-extrabold">Potensi Silian Utara</h1>
             <p class="text-gray-600 mt-3 max-w-2xl mx-auto">Berbagai potensi unggulan yang dimiliki Desa Tolok, mulai
                 dari alam yang indah, UMKM kreatif, hingga hasil bumi yang melimpah.</p>
         </header>

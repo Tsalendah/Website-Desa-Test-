@@ -44,14 +44,14 @@
 
         <!-- Tambahan: Daftar Hukum Tua -->
         <section id="hukum-tua" class="mt-10 max-w-5xl mx-auto bg-white rounded-lg shadow p-6">
-            <h2 class="text-2xl font-bold text-center mb-2">Daftar Hukum Tua Desa Tolok</h2>
+            <h2 class="text-2xl font-bold text-center mb-2">Daftar Hukum Tua Silian Utara</h2>
             <p class="text-center text-sm text-gray-600 mb-4">Berikut adalah sejarah kepemimpinan dan periode Hukum
-                Tua/Pemerintah Desa Tolok:</p>
+                Tua/Pemerintah Silian Utara:</p>
 
             <div class="overflow-x-auto">
                 <table class="w-full border-collapse text-sm">
                     <thead>
-                        <tr class="bg-green-50 text-left">
+                        <tr class="bg-blue-200 text-left">
                             <th class="p-3 border-b">No</th>
                             <th class="p-3 border-b">Periode</th>
                             <th class="p-3 border-b">Nama Hukum Tua</th>

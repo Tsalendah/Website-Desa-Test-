@@ -35,11 +35,12 @@
 
       <div class="container mx-auto px-6 relative z-10">
         <h1 class="text-4xl md:text-6xl font-bold mb-4">
-          Inovasi Digital Sulawesi
+          Selamat Datang di Silian Utara
         </h1>
-        <p class="text-lg md:text-2xl">
-          Membawa Transformasi Digital untuk Masa Depan
-        </p>
+        <p class="text-4xl"> Silian Utara merupakan salah satu desa yang berada di kecamatan Silian Raya, Kabupaten
+          Minahasa Tenggara, provinsi Sulawesi Utara, Indonesia. Desa ini merupakan satu dari 10 desa dan kelurahan yang
+          berada di
+          kecamatan Silian Raya.</p>
       </div>
     </section>
     <section id="about" class="section container mx-auto px-6 py-16">
@@ -178,7 +179,7 @@
   </main>
   <footer class="bg-gray-800 text-white py-6">
     <div class="container mx-auto px-6 text-center">
-      <p>&copy; 2025 Inovasi Digital Nusantara. All Rights Reserved.</p>
+      <p>&copy; 2025 KKT 145. All Rights Reserved.</p>
     </div>
   </footer>
   <div id="login-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-30 flex justify-center items-center">

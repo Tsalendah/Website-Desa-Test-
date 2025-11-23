@@ -1,6 +1,6 @@
 <header class="bg-white shadow-md fixed w-full z-20 top-0">
     <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-        <a href="index.php" class="text-2xl font-bold text-blue-600">Inovasi Digital</a>
+        <a href="index.php" class="text-2xl font-bold text-blue-600">Silian Utara</a>
         <div class="hidden md:flex space-x-6 items-center">
             <a href="index.php" class="text-gray-600 hover:text-blue-600">Home</a>
             <a href="about.php" class="text-gray-600 hover:text-blue-600">About Us</a>
