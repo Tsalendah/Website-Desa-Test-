@@ -9,17 +9,7 @@
 </head>
 
 <body class="bg-gray-100 min-h-screen">
-    <header class="bg-blue-600 text-white p-4 shadow-md fixed w-full z-20 top-0">
-        <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-6">
-                <h1 class="text-lg font-bold">Admin Panel</h1>
-                <a href="admin_gallery.php" class="underline text-sm">Admin Gallery</a>
-            </div>
-            <div>
-                <a href="index.php" class="underline text-sm">Kembali ke Website</a>
-            </div>
-        </div>
-    </header>
+    <?php include __DIR__ . '/headeradmin.php'; ?>
 
     <main class="pt-28 container mx-auto px-4">
         <div class="grid md:grid-cols-2 gap-6">

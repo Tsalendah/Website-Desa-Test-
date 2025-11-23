@@ -11,7 +11,7 @@
 </head>
 
 <body class="bg-gray-100 text-gray-800 min-h-screen">
-    <?php include __DIR__ . '/header.php'; ?>
+    <?php include __DIR__ . '/headeradmin.php'; ?>
 
     <main class="pt-28 container mx-auto px-4 pb-16">
         <div class="max-w-4xl mx-auto bg-white rounded shadow p-6">
